@@ -7,6 +7,7 @@ import {
   } from '@ant-design/icons';
   import { Breadcrumb, Layout, Menu } from 'antd';
   import React, { useState } from 'react';
+  import { menuRoutes } from '../menuRoutes';
   const { Header, Content, Footer, Sider } = Layout;
   function getItem(label, key, icon, children) {
     return {
