@@ -4,7 +4,7 @@ import React from "react";
 export default function HomePage() {
     return (
         <div>
-            <div className="site-layout-background" style={{ padding: 24, textAlign: 'center' }}>
+            <div>
                 <p>Home page</p>
                 <p>Home page</p>
                 <p>Home page</p>
