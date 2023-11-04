@@ -1,15 +1,30 @@
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Space } from 'antd';
+import {Avatar, Dropdown, message, Space} from 'antd';
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
-import React from 'react';
+import React, {useContext} from 'react';
+import {AuthContext} from "../../contexts/AuthContext";
 
 const UserDropDown = () => {
+
+    const authContextValue = useContext(AuthContext);
+
+    const onClick = ({ key }) => {
+        switch (key) {
+            case '1':
+                return;
+            case '2':
+                authContextValue?.logout()
+                return;
+        }
+    };
+
+
 
     const items = [
         {
             key: '1',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                <a rel="noopener noreferrer" >
                     Thông tin cá nhân
                 </a>
             ),
@@ -18,7 +33,7 @@ const UserDropDown = () => {
         {
             key: '2',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
+                <a rel="noopener noreferrer">
                     Đăng xuất
                 </a>
             ),
@@ -30,9 +45,13 @@ const UserDropDown = () => {
     return (<Dropdown
         menu={{
             items,
+            onClick,
         }}
     >
-        <Avatar size={40} icon={<UserOutlined />} />
+        <a onClick={(e) => e.preventDefault()}>
+            <Avatar size={40} icon={<UserOutlined />} />
+        </a>
+
     </Dropdown>);
 };
 export default UserDropDown;

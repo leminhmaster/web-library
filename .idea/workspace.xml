@@ -5,15 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bbbfd3b4-d75a-4e1f-9986-de218b6c03b3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/api/axiosClient.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/login.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/cookieUtils.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/useCookieState.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/AppLayout/AppLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/AppLayout/AppLayout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/_app.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/useLocalStorageState.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/UserDropDown/UserDropDown.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/UserDropDown/UserDropDown.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contexts/AuthContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/contexts/AuthContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/login.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

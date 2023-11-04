@@ -42,7 +42,7 @@ const Login = () => {
         >
             <Card style={{width: 500}}>
                 <div style={{display: "flex", justifyContent: "center"}}>
-                    <Title level={2}>Company Logo </Title>
+                    <Title level={2}>Thư viện sách</Title>
                 </div>
                 <Form
                     name="normal_login"
