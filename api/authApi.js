@@ -1,4 +1,4 @@
-import generateConfigHeader from "../utils/HttpConfig";
+import {generateConfigHeader} from "../utils/HttpConfig";
 import axiosClient from "./axiosClient";
 
 const apiUserInfoByToken = (token,callBackOk, callBackError) => {

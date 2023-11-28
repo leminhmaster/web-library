@@ -5,7 +5,7 @@ import {
     UserOutlined,
     AppstoreAddOutlined,
     AccountBookOutlined,
-    HddFilled,
+    HddFilled, InfoCircleFilled,
 } from '@ant-design/icons';
 import {Layout, Menu, Avatar, Row, Col, Image} from 'antd';
 import React, {useState} from 'react';
@@ -35,9 +35,9 @@ const AppLayout = ({children}) => {
     }
 
     const items = [
-        getItem('book', 'Quản lý sách', <HddFilled/>, null, [
-            getItem('list_book', 'Danh sách đầu sách', <UnorderedListOutlined/>, "/book/list_book"),
-            getItem('add_book', 'Thêm mới đầu sách', <AppstoreAddOutlined/>, "/book/add_book")
+        getItem('book', 'Quản lý tài liêụ', <HddFilled/>, null, [
+            getItem('list_book', 'Danh sách tài liệu', <UnorderedListOutlined/>, "/book/list_book"),
+            getItem('add_book', 'Thêm mới tài liệu', <AppstoreAddOutlined/>, "/book/add_book")
         ]),
         getItem('customer', 'Quản lý khách hàng', <UserOutlined/>, null, [
             getItem('list_customer', 'Danh sách khách hàng', <UnorderedListOutlined/>, "/customer/list_customer"),
@@ -46,12 +46,13 @@ const AppLayout = ({children}) => {
         getItem('loan', 'Quản lý mượn trả', <DesktopOutlined/>, null, [
             getItem("list_loan", 'Danh sách phiếu mượn', <UnorderedListOutlined/>, "/loan/list_loan"),
             getItem("add_loan", 'Thêm mới phiếu mượn', <AppstoreAddOutlined/>, "/loan/add_loan"),
-            // getItem("", 'Trả phiếu mượn', <InfoCircleFilled />)
+            getItem("return_loan", 'Trả phiếu mượn', <InfoCircleFilled />, "/loan/return_loan")
         ])
         ,
-        getItem('account', 'Quản lý tài khoản', <TeamOutlined/>, null, [
-            getItem('account_library', 'Quản lý tài khoản thủ thư', <AccountBookOutlined/>),
-            getItem('account_customer', 'Quản lý tài khoản khách hàng', <UserOutlined/>)]),
+        getItem('staff', 'Quản lý nhân viên', <TeamOutlined/>, null, [
+            getItem('list_staff', 'Danh sách nhân viên', <AccountBookOutlined/>, "/staff/list_staff"),
+            getItem('add_staff', 'Thêm mới nhân viên', <UserOutlined/>, "/staff/add_staff"),
+        ]),
     ];
 
     const findItemFromKey = (key, items) => {

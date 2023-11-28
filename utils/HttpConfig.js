@@ -6,4 +6,25 @@ const generateConfigHeader = (jwtToken) => {
         }
     }
 }
-export default generateConfigHeader
+
+const generateConfigHeaderFormData = (jwtToken) => {
+    return {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${jwtToken}`
+        }
+    }
+}
+
+const generateConfigHeaderApiPubic = () => {
+    return {
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }
+}
+module.exports = {
+    generateConfigHeader: generateConfigHeader,
+    generateConfigHeaderFormData: generateConfigHeaderFormData,
+    generateConfigHeaderApiPubic: generateConfigHeaderApiPubic
+}

@@ -1,9 +1,9 @@
 import axios from 'axios';
-import queryString from 'query-string'
+import qs from 'qs'
 
 const axiosClient = axios.create({
     baseURL: 'http://localhost:8481', // Thay thế bằng URL cụ thể của API
-    paramsSerializer: params => queryString.stringify(params)
+    paramsSerializer: params => qs.stringify(params)
 });
 
 

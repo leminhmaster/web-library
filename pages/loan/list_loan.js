@@ -1,120 +1,72 @@
 import {Button, Input, message, PageHeader, Pagination, Popconfirm, Select, Space, Table, Tag, Tooltip} from "antd";
-import React, {useContext, useEffect, useState} from "react";
-import {timKiemTaiLieu, xoaTaiLieu} from "../../api/taiLieuApi";
-import {AuthContext} from "../../contexts/AuthContext";
 import {nanoid} from "nanoid";
-import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import React, {useContext, useEffect, useState} from "react";
+import {AuthContext} from "../../contexts/AuthContext";
 import {useRouter} from "next/router";
-import {apiListLoaiTaiLieu, apiListThongTinTaiLieuStatus} from "../../api/publicApi";
+import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import {apiListNhanVienStatus} from "../../api/publicApi";
+import {deleteNhanVien, timKiemNhanVien} from "../../api/nhanVienApi"
 
-const Option = Select.Option;
+export default function ListCustomerPage() {
 
-export default function ListBookPage() {
     const authContextValue = useContext(AuthContext);
     const [list, setList] = useState([]);
     const [pagination, setPagination] = useState({current: 1, pageSize: 20, total: 0});
     const router = useRouter();
     const [listStatus, setListStatus] = useState([])
-    const [listLoaiTaiLieu, setListLoaiTaiLieu] = useState([])
     const [keyword, setKeyword] = useState('')
     const [status, setStatus] = useState(null)
-    const [loaiTaiLieu, setLoaiTaiLieu] = useState(null)
     let timeOutId;
 
-    const handleSelectTTTLStatusChange = (value) => {
-        setStatus(value)
-        callApiGetList({
-            ...getParams(),
-            status: value,
-        })
-    };
-
-    const handleSelectLoaiTaiLieuChange = (value) => {
-        setLoaiTaiLieu(value)
-        callApiGetList({...getParams(),
-            loaiTaiLieu: value
-        })
-    };
-
-    const getParams = () => {
-        return {
-            page: pagination.current,
-            size: pagination.pageSize,
-            keyword: keyword,
-            loaiTaiLieu: loaiTaiLieu,
-            status: status
-        }
-    }
-
-    useEffect(() => {
-        apiListThongTinTaiLieuStatus((res) => {
-            setListStatus(res.data);
-        })
-        apiListLoaiTaiLieu((res) => {
-            setListLoaiTaiLieu(res.data)
-        })
-        const testValue = {
-            page: pagination.current,
-            size: pagination.pageSize
-        }
-        callApiGetList(testValue)
-
-    }, []);
-    const handlePaginationChange = (page, pageSize) => {
-        const params = {
-            page: page,
-            size: pageSize,
-            keyword: keyword,
-            loaiTaiLieu: loaiTaiLieu,
-            status: status
-        }
-        callApiGetList(params)
-    };
-
-    const callApiGetList = (params) => {
-        timKiemTaiLieu(authContextValue?.token, params, (res) => {
+    function callApiGetList(params) {
+        timKiemNhanVien(authContextValue?.token, params, (res) => {
             const {content, pageable, totalPages, totalElements} = res.data;
             const list = content.map(content => {
-                const newRecord = {
+                return {
                     ...content,
                     key: nanoid()
-                }
-                return newRecord;
+                };
             })
+
             const pageginationNew = {
                 current: pageable.pageNumber + 1,
                 pageSize: pageable.pageSize,
                 total: totalElements
             }
-            console.log("pageginationNew")
-            console.log(pageginationNew)
             setList(list)
             setPagination(pageginationNew)
         }, (err) => {
-            console.log(err)
+            console.log(err.data)
             message.error("lỗi api")
         })
     }
 
-    function openEditTaiLieuForm(id) {
-        router.push(`/book/add_book?id=${id}`)
-    }
-
-    function deleteTaiLieu(id) {
-        if (id === undefined || id === null)
-            return;
-        const params = {
+    function getParams() {
+        return {
             page: pagination.current,
             size: pagination.pageSize,
             keyword: keyword,
-            loaiTaiLieu: loaiTaiLieu,
-            status: status
+            status: status,
         }
-        xoaTaiLieu(authContextValue?.token, id, (res) => {
-            callApiGetList(params)
+    }
+
+    const handlePaginationChange = (page, pageSize) => {
+        const params = {
+            ...getParams()
+        }
+        callApiGetList(params)
+    };
+
+    function actionDeleteNhanVien(id) {
+        deleteNhanVien(authContextValue?.token, id, (res) => {
+            callApiGetList(getParams())
         }, (err) => {
-            message.error("xóa không thành công")
+            message.error("xay ra loi khi xoa nhan vien")
         })
+    }
+
+    function openEditNhanVienForm(id) {
+        router.push(`/staff/add_staff?id=${id}`)
     }
 
     const columns = [
@@ -126,24 +78,24 @@ export default function ListBookPage() {
             // defaultSortOrder: 'ascend',
         },
         {
-            title: 'Mã tài liệu',
-            dataIndex: 'maThongTinTaiLieu',
+            title: 'Mã khách hàng',
+            dataIndex: 'maKH',
             key: nanoid(),
             // sorter: true,
         },
         {
-            title: 'Tên tài liệu',
-            dataIndex: 'tenTaiLieu',
+            title: 'Họ tên khách hàng',
+            dataIndex: 'hotenKH',
             key: nanoid(),
             // sorter: true,
         },
         {
-            title: 'Loại tài liệu',
-            dataIndex: 'loaiTaiLieuText',
+            title: 'Số CCCD',
+            dataIndex: 'soCCCD',
             key: nanoid(),
         },
         {
-            title: 'Ngày xuất bản',
+            title: 'Số điện thoại',
             dataIndex: 'ngayXuatBan',
             key: nanoid(),
         },
@@ -163,12 +115,14 @@ export default function ListBookPage() {
             render: (_, record) => (
                 <Space size="middle">
                     <Tooltip title={"Chỉnh sửa"} placement="bottom">
-                        <Button icon={<EditOutlined/>} onClick={() => openEditTaiLieuForm(record.id)}/>
+                        <Button icon={<EditOutlined/>}
+                                onClick={() => openEditNhanVienForm(record.id)}
+                        />
                     </Tooltip>
                     <Tooltip title={"Xóa"} placement="bottom">
                         <Popconfirm
                             title={"Bạn có chắc chắn muốn xóa"}
-                            onConfirm={() => deleteTaiLieu(record.id) }
+                            onConfirm={() => actionDeleteNhanVien(record.id) }
                             okText={"Xác nhận"}
                             cancelText={"Hủy"}
                         >
@@ -180,47 +134,53 @@ export default function ListBookPage() {
         }
     ]
 
+    useEffect(() => {
+        apiListNhanVienStatus((res) => {
+            setListStatus(res.data)
+        })
+        const params = {
+            page: 1,
+            size: 20
+        }
+        callApiGetList(params)
+    }, []);
 
     const handleInputkeywordChange = (e) => {
         const value = e.target.value;
         setKeyword(value)
         clearTimeout(timeOutId);
         timeOutId = setTimeout(() => {
-            callApiGetList({
-                ...getParams(),
-                keyword: value
-            })
+            //todo CALL api get list
         })
     }
+
+
+    function handleSelectStatusChange() {
+
+    }
+
     return (
         <div>
             <PageHeader
                 className="ontop-header"
-                title="Danh sách tài liệu"
+                title="Danh sách khách hàng"
                 extra={[
                     <div key="selects" style={{display: 'flex', alignItems: 'center'}}>
                         <Input
-                            placeholder={"Nhập mã tài liệu hoặc tên tài liệu"}
+                            placeholder={"Nhập SDT, CCCD, tên KH"}
                             value={keyword}
                             onChange={handleInputkeywordChange}
                         />
                         <Select
-                            key="select1"
+                            key={nanoid()}
                             style={{marginLeft: '10px', marginRight: '10px'}}
                             allowClear={true}
-                            placeholder={"Trạng thái tài liệu"}
-                            onChange={handleSelectTTTLStatusChange}
+                            placeholder={"Trạng thái khách hàng"}
+                            onChange={handleSelectStatusChange}
                         >
-                            {listStatus.map((value, index, array) =>
-                                (<Option key={nanoid()} value={value.code}>{value.name}</Option>))}
-                        </Select>
-                        <Select
-                            key="select2"
-                            placeholder={"Loại tài liệu"}
-                            allowClear={true}
-                            onChange={handleSelectLoaiTaiLieuChange}>
-                            {listLoaiTaiLieu.map((value, index, array) =>
-                                (<Option key={nanoid()} value={value.code}>{value.name}</Option>))}
+                            {listStatus.map((item, index) => (
+                                <Option key={nanoid()} value={item.code} label={item.name}>{item.name}</Option>
+                            ))}
                         </Select>
                     </div>
                 ]}
