@@ -32,3 +32,15 @@ export const chiTietTailieu = (token, id, callBackOk, callBackError) => {
         .catch(callBackError)
 
 }
+
+export const timKiemTaiLieuDetail = (token, id, params, callBackOk, callBackError) => {
+    axiosClient.get(`/internal/tai-lieu/${id}/detail?` + qs.stringify(params), generateConfigHeader(token))
+        .then(callBackOk)
+        .catch(callBackError)
+}
+
+export const xoaTaiLieuDetail = (token, id, callBackOk, callBackError) => {
+    axiosClient.delete(`/internal/tai-lieu/${id}/detail`, generateConfigHeader(token))
+        .then(callBackOk)
+        .catch(callBackError)
+}

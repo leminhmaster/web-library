@@ -4,10 +4,10 @@ import {
     Form,
     Input,
     InputNumber,
-    List,
     message,
     Modal,
     PageHeader,
+    Popconfirm,
     Select,
     Table,
     Upload
@@ -21,14 +21,15 @@ import {
     apiListNgonNgu,
     apiListNhaXuatBan,
     apiListQuocGia,
-    apiListTacGia, apiListTaiLieuStatus,
+    apiListTacGia,
+    apiListTaiLieuStatus,
     apiListTheLoai
 } from "../../api/publicApi";
 import {nanoid} from "nanoid";
-import {chiTietTailieu, suaTaiLieu, themTaiLieu} from "../../api/taiLieuApi";
+import {chiTietTailieu, suaTaiLieu, themTaiLieu, timKiemTaiLieuDetail, xoaTaiLieuDetail} from "../../api/taiLieuApi";
 import {useRouter} from "next/router";
 import moment from "moment";
-import {data} from "autoprefixer";
+import {addKeyToRecord} from "../../utils/anotherUtils";
 
 const Option = Select.Option
 
@@ -42,6 +43,7 @@ const getBase64 = (file) =>
 
 function AddBookPage({id}) {
     const authContextValue = useContext(AuthContext);
+    const [form] = Form.useForm();
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -81,6 +83,11 @@ function AddBookPage({id}) {
         listTaiLieu: [],
         giaMuon: 0,
         tomTatND: null
+    })
+    const [paramSearchTaiLieu, setParamSearchTaiLieu] = useState({
+        statues: [],
+        maTaiLieu: '',
+        viTri: '',
     })
 
     const handleCancel = () => setPreviewOpen(false);
@@ -179,6 +186,7 @@ function AddBookPage({id}) {
                     }
                 }))
                 setThongTinTaiLieu({...res.data})
+                setFormData(res.data)
             }, (err) => {
                 console.log(err)
                 message.error("lỗi khi call get api")
@@ -186,30 +194,6 @@ function AddBookPage({id}) {
         }
     }, []);
 
-
-    // const getDetailTaiLieu = (id) => {
-    //     chiTietTailieu(authContextValue?.token, id, (res) => {
-    //         console.log("case update" + JSON.stringify(res.data))
-    //         // console.log(res.data)
-    //         setThongTinTaiLieu({...res.data})
-    //         setIsUpdate(true)
-    //         setListTaiLieu(res.data.listTaiLieu.map((value, index, array) => {
-    //             return {
-    //                 ...value,
-    //                 key: nanoid()
-    //             }
-    //         }))
-    //         setFileList(res.data.images.map((value, index, array) => {
-    //             return {
-    //                 ...value,
-    //                 key: nanoid()
-    //             }
-    //         }))
-    //     }, (err) => {
-    //         console.log(err)
-    //         message.error("lỗi khi call get api")
-    //     })
-    // }
 
     const layout = {
         labelCol: {
@@ -240,7 +224,17 @@ function AddBookPage({id}) {
     };
 
 
-    const onFinish = (values) => {
+    const onFinish = () => {
+        form.validateFields()
+            .then((values) => {
+                updateOrCreate();
+            })
+            .catch((errorInfo) => {
+                console.log('Form validation failed:', errorInfo);
+            })
+    };
+
+    const updateOrCreate = () => {
         const newValues = {
             ...thongTinTaiLieu,
             listTaiLieu: listTaiLieu,
@@ -262,10 +256,12 @@ function AddBookPage({id}) {
                 router.push("/book/list_book")
             }, (error) => {
                 message.error(error.data)
-                    .then(r => {console.log(r)})
+                    .then(r => {
+                        console.log(r)
+                    })
             })
         }
-    };
+    }
 
     const uploadButton = (
         <div>
@@ -344,7 +340,18 @@ function AddBookPage({id}) {
         {
             title: 'Action',
             render: (text, record) => (
-                <Button onClick={() => handleRemoveRow(record.key, record)}>Remove</Button>
+                <Popconfirm
+                    title="Bạn có chắc chắn muốn xóa tài liệu này sau khi xóa s không thể khôi phục?"
+                    onConfirm={() =>
+                        handleRemoveRow(record.key, record)}
+
+                    okText="Xác nhận"
+                    cancelText="Hủy bỏ"
+                >
+                    <Button type='danger'>Remove</Button>
+                </Popconfirm>
+
+
             ),
         },
     ];
@@ -372,28 +379,61 @@ function AddBookPage({id}) {
 
 
     const handleRemoveRow = (key, record) => {
-        const updatedDataSource = listTaiLieu.filter((item) => item.key !== key);
-        setListTaiLieu(updatedDataSource);
+        const newListTaiLieu = listTaiLieu
+            .filter((item) => {
+                if (item.key !== key)
+                    return true;
+                else {
+                    if (item.id === undefined || item.id === null) {
+                        return false;
+                    }
+                    let value;
+                    xoaTaiLieuDetail(authContextValue?.token, item.id, (res) => {
+                        value = false;
+                    }, (err) => {
+                        message.error(err.data.errorMessage)
+                        value = true;
+                    })
+                    console.log(value);
+                    return value;
+                }
+            });
+        setListTaiLieu(newListTaiLieu);
+    };
+
+    const setFormData = (info) => {
+        form.setFieldsValue(info);
+    }
+
+    const handleSearchTaiLieu = () => {
+        console.log("search tai lieu")
+        console.log(paramSearchTaiLieu)
+        timKiemTaiLieuDetail(authContextValue?.token, id, paramSearchTaiLieu, (res) => {
+            setListTaiLieu(addKeyToRecord(res.data));
+        }, (err) => {
+            message.error("co loi xay ra")
+        })
     };
 
     return (
         <Form
             {...layout}
+            form={form}
             onFinish={onFinish}
             validateMessages={validateMessages}
-            initialValues={thongTinTaiLieu}
         >
             <Form.Item>
                 <PageHeader
                     className="site-page-header"
-                    onBack={() => router.push('/book/list_book')}
+                    // onBack={() => router.push('/book/list_book')}
                     title={isUpdate ? 'Chỉnh sửa tài liệu' : 'Tạo mới tài liệu'}
                 />
             </Form.Item>
 
             <Form.Item
-                       label="Mã Tài Liệu"
-                       rules={[{required: true,},]}
+                name={"maThongTinTaiLieu"}
+                label="Mã Tài Liệu"
+                rules={[{required: true,},]}
             >
                 <Input onChange={(e) => {
                     const newTTTLValue = {
@@ -405,6 +445,7 @@ function AddBookPage({id}) {
             </Form.Item>
 
             <Form.Item
+                name={"tenTaiLieu"}
                 label="Tên Tài Liệu"
                 rules={[{required: true,},]}
             >
@@ -417,6 +458,7 @@ function AddBookPage({id}) {
                 }} value={thongTinTaiLieu.tenTaiLieu}/>
             </Form.Item>
             <Form.Item
+                name={"loaiTaiLieu"}
                 label="Loại tài liệu"
                 rules={[{required: true,},]}>
                 <Select
@@ -500,13 +542,15 @@ function AddBookPage({id}) {
             <Form.Item
                 label="Ngày xuất bản"
             >
-                <DatePicker value={thongTinTaiLieu.ngayXuatBan!==null? moment(thongTinTaiLieu.ngayXuatBan,'YYYY-MM-DD') : undefined} onChange={(date, dateString) => {
-                    const newTTTLValue = {
-                        ...thongTinTaiLieu,
-                        ngayXuatBan: date?.format('YYYY-MM-DD') ?? null
-                    }
-                    setThongTinTaiLieu(newTTTLValue)
-                }}/>
+                <DatePicker
+                    value={thongTinTaiLieu.ngayXuatBan !== null ? moment(thongTinTaiLieu.ngayXuatBan, 'YYYY-MM-DD') : undefined}
+                    onChange={(date, dateString) => {
+                        const newTTTLValue = {
+                            ...thongTinTaiLieu,
+                            ngayXuatBan: date?.format('YYYY-MM-DD') ?? null
+                        }
+                        setThongTinTaiLieu(newTTTLValue)
+                    }}/>
             </Form.Item>
 
             <Form.Item
@@ -625,7 +669,7 @@ function AddBookPage({id}) {
 
 
             <Form.Item
-                       label="Ảnh tài liệu" getValueFromEvent={getFile}>
+                label="Ảnh tài liệu" getValueFromEvent={getFile}>
                 <Upload
                     accept={"image/*"}
                     listType="picture-card"
@@ -638,79 +682,145 @@ function AddBookPage({id}) {
                 </Upload>
 
             </Form.Item>
+
+            <Form.Item label={"Thêm mới tài liệu"}>
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: 16,
+                }}
+                >
+                    <Input style={{
+                        marginRight: 10,
+                        width: '20%'
+                    }}
+                           value={maTienTo}
+                           placeholder={"Mã tiền tố"}
+                           onChange={(e) => {
+                               setMaTienTo(e.target.value)
+                           }}/>
+
+                    <Input style={{
+                        marginRight: 10,
+                        width: '20%'
+                    }}
+                           value={viTri}
+                           placeholder={"Vị Trí"}
+                           onChange={(e) => {
+                               setViTri(e.target.value)
+
+                           }}/>
+                    <InputNumber
+                        style={{
+                            marginRight: 10,
+                            width: '20%'
+                        }}
+                        value={soThuTuBatDau}
+                        placeholder={"Số thứ tự bắt đầu"}
+                        onChange={(value) => {
+                            setSoThuTuBatDau(value)
+                        }}/>
+                    <InputNumber
+                        style={{
+                            marginRight: 10,
+                            width: '20%'
+                        }}
+                        value={soLuong}
+                        placeholder={"Số lượng"} onChange={(value) => {
+                        setSoLuong(value)
+                    }}/>
+                    <Select
+                        style={{
+                            marginRight: 10,
+                            width: '20%'
+                        }}
+                        value={taiLieuStatus}
+                        placeholder="Trang thai tai lieu"
+                        onChange={(value) => {
+                            setTaiLieuStatus(value)
+                        }}>
+                        {listTLStatus.map((item, index) => (
+                            <Option key={nanoid()} value={item.code} label={item.name}>{item.name}</Option>
+                        ))}
+                    </Select>
+                    <Button
+                        onClick={handleAddRow}
+                        type="primary">
+                        Thêm tài liệu
+                    </Button>
+                </div>
+            </Form.Item>
+
             <Form.Item label={"Danh sách tài liệu"}>
                 <div>
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginBottom: 16,
-                    }}>
-                        <Input style={{
-                            marginRight: 10,
-                            width: '20%'
+                    {
+                        isUpdate ? (<div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: 16,
                         }}
-                               value={maTienTo}
-                               placeholder={"Mã tiền tố"}
-                               onChange={(e) => {
-                                   setMaTienTo(e.target.value)
-                               }}/>
-
-                        <Input style={{
-                            marginRight: 10,
-                            width: '20%'
-                        }}
-                               value={viTri}
-                               placeholder={"Vị Trí"}
-                               onChange={(e) => {
-                                   setViTri(e.target.value)
-
-                               }}/>
-                        <InputNumber
-                            style={{
+                        >
+                            <Input style={{
                                 marginRight: 10,
                                 width: '20%'
                             }}
-                            value={soThuTuBatDau}
-                            placeholder={"Số thứ tự bắt đầu"}
-                            onChange={(value) => {
-                                setSoThuTuBatDau(value)
-                            }}/>
-                        <InputNumber
-                            style={{
-                                marginRight: 10,
-                                width: '20%'
-                            }}
-                            value={soLuong}
-                            placeholder={"Số lượng"} onChange={(value) => {
-                            setSoLuong(value)
-                        }}/>
-                        <Select
-                            style={{
-                                marginRight: 10,
-                                width: '20%'
-                            }}
-                            value={taiLieuStatus}
-                            placeholder="Trang thai tai lieu"
-                            onChange={(value) => {
-                                setTaiLieuStatus(value)
-                            }}>
-                            {listTLStatus.map((item, index) => (
-                                <Option key={nanoid()} value={item.code} label={item.name}>{item.name}</Option>
-                            ))}
-                        </Select>
-                        <Button
-                            onClick={handleAddRow}
-                            type="primary">
-                            Thêm tài liệu
-                        </Button>
-                    </div>
+                                   value={paramSearchTaiLieu.maTaiLieu}
+                                   placeholder={"Mã TL"}
+                                   onChange={(e) => {
+                                       const newParam = {
+                                           ...paramSearchTaiLieu,
+                                           maTaiLieu: e.target.value
+                                       }
+                                       setParamSearchTaiLieu(newParam)
+                                   }}/>
+                            <Input
+                                style={{
+                                    marginRight: 10,
+                                    width: '20%'
+                                }}
+                                value={paramSearchTaiLieu.viTri}
+                                placeholder={"Vị trí"}
+                                onChange={(e) => {
+                                    const newParam = {
+                                        ...paramSearchTaiLieu,
+                                        viTri: e.target.value
+                                    }
+                                    setParamSearchTaiLieu(newParam)
+                                }}
+                            />
+                            <Select
+                                style={{
+                                    marginRight: 10,
+                                    width: '20%'
+                                }}
+                                value={paramSearchTaiLieu.statues}
+                                placeholder="Trang thai tai lieu"
+                                onChange={(value) => {
+                                    const newParam = {
+                                        ...paramSearchTaiLieu,
+                                        statues: [value]
+                                    }
+                                    setParamSearchTaiLieu(newParam)
+                                }}>
+                                {listTLStatus.map((item, index) => (
+                                    <Option key={nanoid()} value={item.code} label={item.name}>{item.name}</Option>
+                                ))}
+                            </Select>
+                            <Button
+                                onClick={handleSearchTaiLieu}
+                                type="primary">
+                                Tìm kiếm
+                            </Button>
+                        </div>) : (<div/>)
+                    }
 
                     <Table
                         bordered
                         dataSource={listTaiLieu}
-                        scroll={{y: 200}}
+                        scroll={{y: 300}}
                         columns={columns}
                     />
+                    <div>Tổng số: <span>{listTaiLieu.length}</span></div>
                 </div>
             </Form.Item>
 
@@ -720,13 +830,12 @@ function AddBookPage({id}) {
                     offset: 8,
                 }}
             >
-                <Button type="primary" htmlType="submit">
+                <Button style={{marginRight: 10,}} type="primary" htmlType="submit">
                     {isUpdate ? 'Chỉnh sửa thông tin' : 'Tạo mới tài liệu'}
                 </Button>
-                <Button type="info" onClick={() => {
-                    // router.push("/book/list_book")
-                    console.log("state thong tin tai lieu")
-                    console.log(thongTinTaiLieu)
+
+                <Button style={{marginRight: 10,}} type="danger" onClick={() => {
+                    router.push("/book/list_book")
                 }}>Hủy</Button>
             </Form.Item>
 

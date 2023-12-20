@@ -1,16 +1,17 @@
-import { DownOutlined, SmileOutlined } from '@ant-design/icons';
-import {Avatar, Dropdown, message, Space} from 'antd';
-import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import {LogoutOutlined, UserOutlined} from '@ant-design/icons';
+import {Avatar, Dropdown} from 'antd';
 import React, {useContext} from 'react';
 import {AuthContext} from "../../contexts/AuthContext";
+import {router} from "next/client";
 
 const UserDropDown = () => {
 
     const authContextValue = useContext(AuthContext);
 
-    const onClick = ({ key }) => {
+    const onClick = ({key}) => {
         switch (key) {
             case '1':
+                router.push("/user_detail")
                 return;
             case '2':
                 authContextValue?.logout()
@@ -19,16 +20,15 @@ const UserDropDown = () => {
     };
 
 
-
     const items = [
         {
             key: '1',
             label: (
-                <a rel="noopener noreferrer" >
+                <a rel="noopener noreferrer">
                     Thông tin cá nhân
                 </a>
             ),
-            icon: <UserOutlined />
+            icon: <UserOutlined/>
         },
         {
             key: '2',
@@ -38,7 +38,7 @@ const UserDropDown = () => {
                 </a>
             ),
             danger: true,
-            icon: <LogoutOutlined />,
+            icon: <LogoutOutlined/>,
         }
     ];
 
@@ -49,7 +49,7 @@ const UserDropDown = () => {
         }}
     >
         <a onClick={(e) => e.preventDefault()}>
-            <Avatar size={40} icon={<UserOutlined />} />
+            <Avatar size={40} icon={<UserOutlined/>}/>
         </a>
 
     </Dropdown>);

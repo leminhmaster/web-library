@@ -29,3 +29,15 @@ export const timKiemNhanVien = (token, params, callBackOk, callBackError) => {
         .then(callBackOk)
         .catch(callBackError)
 }
+
+export const activateNhanVien = (token, id, callBackOk, callBackError) => {
+    axiosClient.patch(`/admin/nhan-vien/${id}:active`, null, generateConfigHeader(token))
+        .then(callBackOk)
+        .catch(callBackError)
+}
+
+export const inactivateNhanVien = (token, id, callBackOk, callBackError) => {
+    axiosClient.patch(`/admin/nhan-vien/${id}:deactivate`,null ,generateConfigHeader(token))
+        .then(callBackOk)
+        .catch(callBackError)
+}

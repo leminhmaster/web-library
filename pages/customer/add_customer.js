@@ -4,7 +4,6 @@ import moment from "moment/moment";
 import {AuthContext} from "../../contexts/AuthContext";
 import {chiTietKhachHang, suaKhachHang, themKhachHang} from "../../api/khachHangApi";
 import {useRouter} from "next/router";
-import {nanoid} from "nanoid";
 
 function AddCustomerPage({id}) {
 
@@ -19,6 +18,7 @@ function AddCustomerPage({id}) {
     })
     const [isUpdate, setIsUpdate] = useState(false);
     const router = useRouter();
+    const [form] = Form.useForm();
 
 
     const layout = {
@@ -47,6 +47,7 @@ function AddCustomerPage({id}) {
             chiTietKhachHang(authContextValue?.token, id, (res) => {
                 setKhachHang(res.data);
                 setIsUpdate(true)
+                setFormData(res.data);
             }, (err) => {
                 setIsUpdate(false);
             })
@@ -55,16 +56,12 @@ function AddCustomerPage({id}) {
 
     const onFinish = (values) => {
         if (isUpdate) {
-            console.log("case update")
-            console.log(khachHang)
             suaKhachHang(authContextValue?.token, id, khachHang, (res) => {
                 router.push("/customer/list_customer")
             }, (err) => {
                 message.error("loi khi tao")
             })
         } else {
-            console.log("case create")
-            console.log(khachHang)
             themKhachHang(authContextValue?.token, khachHang, (res) => {
                 router.push("/customer/list_customer")
             }, (err) => {
@@ -73,9 +70,14 @@ function AddCustomerPage({id}) {
         }
     }
 
+    const setFormData = (info) => {
+        form.setFieldsValue(info);
+    }
+
     return (
         <Form
             {...layout}
+            form={form}
             onFinish={onFinish}
             validateMessages={validateMessages}
         >
@@ -86,7 +88,9 @@ function AddCustomerPage({id}) {
                     title={isUpdate ? 'Chỉnh sửa thông tin khách hàng' : 'Tạo mới thông tin khách hàng'}
                 />
             </Form.Item>
-            <Form.Item id={nanoid()} label={"Mã khách hàng"}>
+            <Form.Item
+                name={"maKH"}
+                label={"Mã khách hàng"}>
                 <Input onChange={(e) => {
                     const newValue = {
                         ...khachHang,
@@ -95,7 +99,10 @@ function AddCustomerPage({id}) {
                     setKhachHang(newValue)
                 }} value={khachHang.maKH} readOnly/>
             </Form.Item>
-            <Form.Item label={"Tên khách hàng"} rules={[{required: true,},]}>
+            <Form.Item
+                name={"hoTenKH"}
+                label={"Tên khách hàng"}
+                rules={[{required: true,},]}>
                 <Input onChange={(e) => {
                     const newValue = {
                         ...khachHang,
@@ -104,7 +111,8 @@ function AddCustomerPage({id}) {
                     setKhachHang(newValue)
                 }} value={khachHang.hoTenKH}/>
             </Form.Item>
-            <Form.Item label={"Ngày sinh"}>
+            <Form.Item
+                label={"Ngày sinh"}>
                 <DatePicker value={khachHang.ngaySinh !== null ? moment(khachHang.ngaySinh, 'YYYY-MM-DD') : undefined}
                             onChange={(date, dateString) => {
                                 const newValue = {
@@ -114,7 +122,9 @@ function AddCustomerPage({id}) {
                                 setKhachHang(newValue)
                             }}/>
             </Form.Item>
-            <Form.Item label={"Số CCCD"} rules={[{required: true,},]}>
+            <Form.Item
+                name={"soCCCD"}
+                label={"Số CCCD"} rules={[{required: true,},]}>
                 <Input onChange={(e) => {
                     const newValue = {
                         ...khachHang,
@@ -123,7 +133,9 @@ function AddCustomerPage({id}) {
                     setKhachHang(newValue)
                 }} value={khachHang.soCCCD}/>
             </Form.Item>
-            <Form.Item label={"Địa chỉ"}>
+            <Form.Item
+                name={"diaChi"}
+                label={"Địa chỉ"}>
                 <Input onChange={(e) => {
                     const newValue = {
                         ...khachHang,
@@ -132,7 +144,10 @@ function AddCustomerPage({id}) {
                     setKhachHang(newValue)
                 }} value={khachHang.diaChi}/>
             </Form.Item>
-            <Form.Item label={"Số điện thoại"} rules={[{required: true,},]}>
+            <Form.Item
+                name={"sdt"}
+                label={"Số điện thoại"}
+                rules={[{required: true,},]}>
                 <Input onChange={(e) => {
                     const newValue = {
                         ...khachHang,
@@ -148,10 +163,10 @@ function AddCustomerPage({id}) {
                     offset: 8,
                 }}
             >
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" style={{marginRight: 10,}}>
                     {isUpdate ? 'Chỉnh sửa' : 'Tạo mới'}
                 </Button>
-                <Button type="info" onClick={() => {
+                <Button type="danger" onClick={() => {
                     router.push("/customer/list_customer")
                 }}>Hủy</Button>
             </Form.Item>

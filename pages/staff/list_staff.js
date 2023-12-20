@@ -3,12 +3,12 @@ import {nanoid} from "nanoid";
 import React, {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../contexts/AuthContext";
 import {useRouter} from "next/router";
-import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import {CheckOutlined, DeleteOutlined, EditOutlined, StopOutlined} from "@ant-design/icons";
 import {apiListNhanVienStatus} from "../../api/publicApi";
-import {deleteNhanVien, timKiemNhanVien} from "../../api/nhanVienApi"
+import {activateNhanVien, deleteNhanVien, inactivateNhanVien, timKiemNhanVien} from "../../api/nhanVienApi"
+import {nhanVienIsActivate, nhanVienIsDeactivate, nhanVienIsDelete} from "../../utils/conditionUtils";
 
 export default function ListCustomerPage() {
-
     const authContextValue = useContext(AuthContext);
     const [list, setList] = useState([]);
     const [pagination, setPagination] = useState({current: 1, pageSize: 20, total: 0});
@@ -114,21 +114,60 @@ export default function ListCustomerPage() {
             key: nanoid(),
             render: (_, record) => (
                 <Space size="middle">
+
                     <Tooltip title={"Chỉnh sửa"} placement="bottom">
                         <Button icon={<EditOutlined/>}
-                            onClick={() => openEditNhanVienForm(record.id)}
+                                onClick={() => openEditNhanVienForm(record.id)}
                         />
                     </Tooltip>
-                    <Tooltip title={"Xóa"} placement="bottom">
+
+                    {nhanVienIsDelete(record.status) ? (<Tooltip title={"Xóa"} placement="bottom">
                         <Popconfirm
                             title={"Bạn có chắc chắn muốn xóa"}
-                            onConfirm={() => actionDeleteNhanVien(record.id) }
+                            onConfirm={() => actionDeleteNhanVien(record.id)}
                             okText={"Xác nhận"}
                             cancelText={"Hủy"}
                         >
-                            <Button icon={<DeleteOutlined/>} />
+                            <Button icon={<DeleteOutlined/>}/>
                         </Popconfirm>
-                    </Tooltip>
+                    </Tooltip>) : (null)}
+
+                    {nhanVienIsActivate(record.status) ? (<Tooltip title={"activate nhân viên"} placement="bottom">
+                        <Popconfirm
+                            title={"Bạn có chắc chắn muốn cho nhân viên này làm việc"}
+                            onConfirm={() => {
+                                activateNhanVien(authContextValue?.token, record.id, (res) => {
+                                    message.success("activate thanh cong")
+                                }, (err) => {
+                                    message.error("activate khong thanh cong")
+                                })
+                            }}
+                            okText={"Xác nhận"}
+                            cancelText={"Hủy"}
+                        >
+                            <Button icon={<CheckOutlined/>}/>
+                        </Popconfirm>
+                    </Tooltip>) : (null)
+                    }
+
+                    {nhanVienIsDeactivate(record.status) ? (<Tooltip title={"deactivate nhân viên"} placement="bottom">
+                        <Popconfirm
+                            title={"Bạn có chắc chắn đổi cho nhân viên này nghỉ làm việc"}
+                            onConfirm={() => {
+                                inactivateNhanVien(authContextValue?.token, record.id, (res) => {
+                                    message.success("deactivate thanh cong")
+                                }, (err) => {
+                                    message.error("deactivate khong thanh cong")
+                                })
+                            }}
+                            okText={"Xác nhận"}
+                            cancelText={"Hủy"}
+                        >
+                            <Button icon={<StopOutlined/>}/>
+                        </Popconfirm>
+                    </Tooltip>) : <div/>
+                    }
+
                 </Space>
             )
         }
@@ -148,26 +187,42 @@ export default function ListCustomerPage() {
     const handleInputkeywordChange = (e) => {
         const value = e.target.value;
         setKeyword(value)
+        const params = {
+            ...getParams(),
+            keyword: value
+        }
         clearTimeout(timeOutId);
         timeOutId = setTimeout(() => {
-            //todo CALL api get list
+            callApiGetList(params)
         })
     }
 
 
-    function handleSelectStatusChange() {
-
+    function handleSelectStatusChange(value) {
+        setStatus(value);
+        const params = {
+            ...getParams(),
+            status: value
+        }
+        callApiGetList(params)
     }
 
     return (
         <div>
             <PageHeader
-                className="ontop-header"
-                title="Danh sách khách hàng"
+                title="Danh sách nhân viên"
+                extra={[
+                    <div key="selects" style={{display: 'flex', alignItems: 'center'}}>
+                        <Button onClick={() => router.push("/staff/add_staff")} type={"primary"}>Thêm mới nhân
+                            viên</Button>
+                    </div>
+                ]}
+            />
+            <PageHeader
                 extra={[
                     <div key="selects" style={{display: 'flex', alignItems: 'center'}}>
                         <Input
-                            placeholder={"Nhập SDT, CCCD, tên KH"}
+                            placeholder={"Nhập SDT, CCCD, tên NV"}
                             value={keyword}
                             onChange={handleInputkeywordChange}
                         />
@@ -175,7 +230,8 @@ export default function ListCustomerPage() {
                             key={nanoid()}
                             style={{marginLeft: '10px', marginRight: '10px'}}
                             allowClear={true}
-                            placeholder={"Trạng thái khách hàng"}
+                            value={status}
+                            placeholder={"Trạng thái nhân viên"}
                             onChange={handleSelectStatusChange}
                         >
                             {listStatus.map((item, index) => (

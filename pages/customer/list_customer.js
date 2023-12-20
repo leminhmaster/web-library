@@ -110,7 +110,7 @@ export default function ListCustomerPage() {
             key: nanoid(),
             render: (text, record) => (
                 <Tag color="blue" key={nanoid()}>
-                    {record.statusText}
+                    {record.statusPhieuMuonText}
                 </Tag>
             )
         },
@@ -127,11 +127,11 @@ export default function ListCustomerPage() {
                     <Tooltip title={"Xóa"} placement="bottom">
                         <Popconfirm
                             title={"Bạn có chắc chắn muốn xóa"}
-                            onConfirm={() => deleteKhachHang(record.id) }
+                            onConfirm={() => deleteKhachHang(record.id)}
                             okText={"Xác nhận"}
                             cancelText={"Hủy"}
                         >
-                            <Button icon={<DeleteOutlined/>} />
+                            <Button icon={<DeleteOutlined/>}/>
                         </Popconfirm>
                     </Tooltip>
                 </Space>
@@ -169,8 +169,15 @@ export default function ListCustomerPage() {
     return (
         <div>
             <PageHeader
-                className="ontop-header"
                 title="Danh sách khách hàng"
+                extra={[
+                    <div key="selects" style={{display: 'flex', alignItems: 'center'}}>
+                        <Button onClick={() => router.push("/customer/add_customer")}
+                                type={"primary"}>Thêm mới khách hàng</Button>
+                    </div>
+                ]}
+            />
+            <PageHeader
                 extra={[
                     <div key="selects" style={{display: 'flex', alignItems: 'center'}}>
                         <Input
@@ -189,8 +196,6 @@ export default function ListCustomerPage() {
                                 <Option key={nanoid()} value={item.code} label={item.name}>{item.name}</Option>
                             ))}
                         </Select>
-                        <Button type="primary" onClick={() => router.push("/customer/add_customer")}
-                                style={{marginLeft: '10px', marginRight: '10px'}}>Thêm mới</Button>
                     </div>
                 ]}
             />

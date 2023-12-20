@@ -112,5 +112,10 @@ export const apiListSex = (callBackOk, callBackError) => {
         .catch(error => callBackError(error))
 }
 
+export const apiListPhieuMuonStatus = (callBackOk, callBackError) => {
+    axiosClient.get("/public/phieu-muon-status", generateConfigHeaderApiPubic())
+        .then(res => callBackOk(res))
+        .catch(error => callBackError(error))
+}
 
 

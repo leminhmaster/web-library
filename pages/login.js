@@ -1,13 +1,12 @@
-import {Button, Checkbox, Form, Input, Card} from 'antd';
-import {UserOutlined, LockOutlined} from "@ant-design/icons";
+import {Button, Card, Form, Image, Input, message, Typography} from 'antd';
+import {LockOutlined, UserOutlined} from "@ant-design/icons";
 import React from 'react';
 import {apiLogin} from "../api/authApi";
-import {message} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {setJwtToken} from "../slices/tokenSlice";
 import {useRouter} from "next/router";
-import { Typography } from "antd";
-const { Title } = Typography;
+
+const {Title} = Typography;
 
 const Login = () => {
     const router = useRouter()
@@ -20,10 +19,10 @@ const Login = () => {
         apiLogin(values, (res) => {
             var accessToken = res.data.accessToken;
             dispatch(setJwtToken(accessToken));
-            router.push("/book/list_book");
+            router.push("/");
             console.log("data: " + JSON.stringify(res.data))
         }, (error) => {
-
+            message.error("Đăng nhập không thành công")
             console.log("error: " + JSON.stringify(error))
         })
 
@@ -32,71 +31,89 @@ const Login = () => {
         console.log('Failed:', errorInfo);
     };
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh",
-            }}
-        >
-            <Card style={{width: 500}}>
-                <div style={{display: "flex", justifyContent: "center"}}>
-                    <Title level={2}>Thư viện sách</Title>
-                </div>
-                <Form
-                    name="normal_login"
-                    className="login-form"
-                    initialValues={{
-                        remember: true,
-                    }}
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
-                >
-                    <Form.Item
-                        name="username"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your Username!',
-                            },
-                        ]}
+        <div style={{
+            backgroundImage: 'url("/img_lib.jpg")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            width: '100vw',
+            height: '100vh',
+        }}>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+
+                    alignItems: "center",
+                    height: "100vh",
+                }}
+            >
+                <Card style={{
+                    width: 500,
+                    borderRadius: '20px',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.16)',
+                    opacity: 0.9,
+                    color: 'tranparent'
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
+                        <Image width={50} src={'/img_1.png'} preview={false}/>
+                        <Title level={3}>Thư viện MIN</Title>
+                        <Title level={5}>Đăng nhập để vào trang quản lý</Title>
+                    </div>
+                    <Form
+                        name="normal_login"
+                        className="login-form"
+                        initialValues={{
+                            remember: true,
+                        }}
+                        onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
                     >
-                        <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Username"/>
-                    </Form.Item>
-                    <Form.Item
-                        name="password"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your Password!',
-                            },
-                        ]}
-                    >
-                        <Input
-                            prefix={<LockOutlined className="site-form-item-icon"/>}
-                            type="password"
-                            placeholder="Password"
-                        />
-                    </Form.Item>
-                    <Form.Item>
-                        <Form.Item name="remember" valuePropName="checked" noStyle>
-                            <Checkbox>Remember me</Checkbox>
+                        <Form.Item
+                            name="username"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your Username!',
+                                },
+                            ]}
+                        >
+                            <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Username"/>
                         </Form.Item>
+                        <Form.Item
+                            name="password"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your Password!',
+                                },
+                            ]}
+                        >
+                            <Input
+                                prefix={<LockOutlined className="site-form-item-icon"/>}
+                                type="password"
+                                placeholder="Password"
+                            />
+                        </Form.Item>
+                        {/*<Form.Item>*/}
+                        {/*    <Form.Item name="remember" valuePropName="checked" noStyle>*/}
+                        {/*        <Checkbox>Remember me</Checkbox>*/}
+                        {/*    </Form.Item>*/}
+                        {/*</Form.Item>*/}
 
-                        <a className="login-form-forgot" href="">
-                            Forgot password
-                        </a>
-                    </Form.Item>
-
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" className="login-form-button">
-                            Log in
-                        </Button>
-                        Or <a href="">register now!</a>
-                    </Form.Item>
-                </Form>
-            </Card>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" className="login-form-button"
+                                    style={{width: '100%'}}>
+                                Đăng nhập
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Card>
+            </div>
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import {Button, Input, message, PageHeader, Pagination, Popconfirm, Select, Space, Table, Tag, Tooltip} from "antd";
+import {Button, Input, message, PageHeader, Pagination, Popconfirm, Select, Space, Table, Tooltip} from "antd";
 import React, {useContext, useEffect, useState} from "react";
 import {timKiemTaiLieu, xoaTaiLieu} from "../../api/taiLieuApi";
 import {AuthContext} from "../../contexts/AuthContext";
@@ -6,6 +6,7 @@ import {nanoid} from "nanoid";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import {useRouter} from "next/router";
 import {apiListLoaiTaiLieu, apiListThongTinTaiLieuStatus} from "../../api/publicApi";
+import {genTagNoIcon} from "../../utils/anotherUtils";
 
 const Option = Select.Option;
 
@@ -31,7 +32,8 @@ export default function ListBookPage() {
 
     const handleSelectLoaiTaiLieuChange = (value) => {
         setLoaiTaiLieu(value)
-        callApiGetList({...getParams(),
+        callApiGetList({
+            ...getParams(),
             loaiTaiLieu: value
         })
     };
@@ -119,11 +121,10 @@ export default function ListBookPage() {
 
     const columns = [
         {
-            title: 'id',
-            dataIndex: 'id',
-            key: nanoid(),
-            // sorter: true,
-            // defaultSortOrder: 'ascend',
+            title: 'STT',
+            dataIndex: 'index',
+            key: 'index',
+            render: (text, record, index) => index + 1,
         },
         {
             title: 'Mã tài liệu',
@@ -136,6 +137,15 @@ export default function ListBookPage() {
             dataIndex: 'tenTaiLieu',
             key: nanoid(),
             // sorter: true,
+        },
+        {
+            title: 'Ảnh tài liệu',
+            dataIndex: 'images',
+            key: nanoid(),
+            render: (text, record) => {
+                // console.log(record)
+                return <img width={"50px"} alt={record.images[0]?.name} src={record.images[0]?.url}/>
+            }
         },
         {
             title: 'Loại tài liệu',
@@ -151,30 +161,42 @@ export default function ListBookPage() {
             title: "Trạng thái",
             dataIndex: "status",
             key: nanoid(),
-            render: (text, record) => (
-                <Tag color="blue" key={nanoid()}>
-                    {record.statusText}
-                </Tag>
-            )
+            render: (text, record) => {
+                switch (record.status) {
+                    case 'CON_HANG_MUON':
+                        return genTagNoIcon('success', record.statusText)
+                    case 'HET_HANG_MUON':
+                        return genTagNoIcon('red', record.statusText)
+                    case 'KHONG_CO_HANG':
+                        return genTagNoIcon('warning', record.statusText)
+                    default:
+                        return genTagNoIcon('default', record.statusText);
+                }
+            }
         },
         {
             title: "Action",
             key: nanoid(),
             render: (_, record) => (
                 <Space size="middle">
+
                     <Tooltip title={"Chỉnh sửa"} placement="bottom">
-                        <Button icon={<EditOutlined/>} onClick={() => openEditTaiLieuForm(record.id)}/>
+                        <Button icon={<EditOutlined/>}
+                                onClick={() => openEditTaiLieuForm(record.id)}/>
                     </Tooltip>
+
                     <Tooltip title={"Xóa"} placement="bottom">
+
                         <Popconfirm
                             title={"Bạn có chắc chắn muốn xóa"}
-                            onConfirm={() => deleteTaiLieu(record.id) }
+                            onConfirm={() => deleteTaiLieu(record.id)}
                             okText={"Xác nhận"}
                             cancelText={"Hủy"}
                         >
-                            <Button icon={<DeleteOutlined/>} />
+                            <Button icon={<DeleteOutlined/>}/>
                         </Popconfirm>
                     </Tooltip>
+
                 </Space>
             )
         }
@@ -197,6 +219,13 @@ export default function ListBookPage() {
             <PageHeader
                 className="ontop-header"
                 title="Danh sách tài liệu"
+                extra={[
+                    <div><Button type={"primary"} onClick={() => router.push("/book/add_book")}>Thêm mới tài
+                        liệu</Button></div>,
+                ]}
+            />
+            <PageHeader
+                className="ontop-header"
                 extra={[
                     <div key="selects" style={{display: 'flex', alignItems: 'center'}}>
                         <Input
