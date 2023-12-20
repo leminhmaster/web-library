@@ -11,19 +11,15 @@ const {Title} = Typography;
 const Login = () => {
     const router = useRouter()
     const dispatch = useDispatch()
-    const tokenInStore = useSelector((state) => state.token.token);
 
     const onFinish = (values) => {
         console.log('Success:', values);
 
         apiLogin(values, (res) => {
-            var accessToken = res.data.accessToken;
-            dispatch(setJwtToken(accessToken));
+            dispatch(setJwtToken(res.data.accessToken));
             router.push("/");
-            console.log("data: " + JSON.stringify(res.data))
         }, (error) => {
             message.error("Đăng nhập không thành công")
-            console.log("error: " + JSON.stringify(error))
         })
 
     };
@@ -99,11 +95,6 @@ const Login = () => {
                                 placeholder="Password"
                             />
                         </Form.Item>
-                        {/*<Form.Item>*/}
-                        {/*    <Form.Item name="remember" valuePropName="checked" noStyle>*/}
-                        {/*        <Checkbox>Remember me</Checkbox>*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Form.Item>*/}
 
                         <Form.Item>
                             <Button type="primary" htmlType="submit" className="login-form-button"

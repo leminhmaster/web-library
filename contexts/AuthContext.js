@@ -1,12 +1,15 @@
-"use client";
 import {useRouter} from "next/router";
-import {createContext, useEffect, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {apiUserInfoByToken} from "../api/authApi"
 import cookieUtils from "../utils/cookieUtils";
 import {setJwtToken} from "../slices/tokenSlice";
 import {isInternalUser} from "../utils/conditionUtils";
-import {routingClientWeb} from "../utils/anotherUtils";
+import AppClientLayout from "../components/AppLayout/AppClientLayout";
+import Home from "../pages/home";
+import Login from "../pages/login";
+import Cart from "../pages/cart";
+import UserDetail from "../pages/user_detail";
 
 
 export const AuthContext = createContext();
@@ -17,7 +20,6 @@ const AuthProvider = (props) => {
         name: null,
         roles: []
     });
-    const [checkAuthentication, setCheckAuthentication] = useState(false);
     const tokenInStore = useSelector((state) => state.token.token);
     const dispatch = useDispatch()
 
@@ -26,24 +28,39 @@ const AuthProvider = (props) => {
         dispatch(setJwtToken(null))
     }
 
+    const routingClientWeb = (routeString) => {
+        switch (routeString) {
+            case '/':
+            case '':
+            case '/home':
+                return <AppClientLayout><Home/></AppClientLayout>
+            case '/login':
+                return <Login/>
+            case '/cart':
+                return <AppClientLayout><Cart/></AppClientLayout>
+            case '/user':
+            case '/register':
+                return <AppClientLayout><UserDetail/></AppClientLayout>
+            default:
+                return <h1>Lỗi! Trang khong ton tai</h1>
+        }
+    }
+
     useEffect(() => {
-        console.log("token in store depen: " + tokenInStore)
         console.log(router.asPath)
         if (tokenInStore !== null) {
             apiUserInfoByToken(tokenInStore, (res) => {
+                console.log("token")
+                console.log(res.data)
                 setUserInfo(res.data)
-                setCheckAuthentication(true)
                 cookieUtils.setCookie('token', tokenInStore)
             }, (error) => {
-                setCheckAuthentication(false)
                 dispatch(setJwtToken(null))
                 cookieUtils.removeCookie('token')
             })
         } else {
             const tokenInCookies = cookieUtils.getCookie('token')
-            // console.log("token in cookies = "+ tokenInCookies)
             if (tokenInCookies === undefined || tokenInCookies === null) {
-                setCheckAuthentication(false)
             } else
                 dispatch(setJwtToken(tokenInCookies))
         }

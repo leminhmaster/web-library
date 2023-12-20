@@ -2,11 +2,12 @@ import {LogoutOutlined, UserOutlined} from '@ant-design/icons';
 import {Avatar, Dropdown} from 'antd';
 import React, {useContext} from 'react';
 import {AuthContext} from "../../contexts/AuthContext";
-import {router} from "next/client";
+import {useRouter} from "next/router";
 
 const UserDropDown = () => {
 
     const authContextValue = useContext(AuthContext);
+    const router = useRouter();
 
     const onClick = ({key}) => {
         switch (key) {

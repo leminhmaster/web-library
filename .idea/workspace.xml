@@ -4,11 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bbbfd3b4-d75a-4e1f-9986-de218b6c03b3" name="Changes" comment="">
+    <list default="true" id="bbbfd3b4-d75a-4e1f-9986-de218b6c03b3" name="Changes" comment="impl all api not phieu muon">
+      <change afterPath="$PROJECT_DIR$/components/AppLayout/AppClientLayout.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/UserDropDown/UserClientDropDown.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/cart.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/home.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/user_detail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/authApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/api/authApi.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/UserDropDown/UserDropDown.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/UserDropDown/UserDropDown.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contexts/AuthContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/contexts/AuthContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/images.jfif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/img.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/anotherUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/anotherUtils.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +28,11 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="com.haulmont.rcb.palette" />
+        <option value="com.haulmont.rcb.previews" />
+        <option value="com.haulmont.rcb.index" />
+        <option value="com.haulmont.rcb.useInitial" />
+        <option value="com.haulmont.rcb.README" />
         <option value="JavaScript File" />
       </list>
     </option>
@@ -32,6 +47,9 @@
   &quot;associatedIndex&quot;: 0
 }</component>
   <component name="ProjectId" id="2X3WIaIurWCVRhkkkzxz9GhOfmr" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -39,24 +57,40 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ReactCreateComponentLastSelected&quot;: &quot;arrowFunctionComponent&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/DoAnTotNghiep/FrontEnd/web-library/utils&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/DoAnTotNghiep/FrontEnd/web-library/components/UserDropDown&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\BOSS\\AppData\\Local\\Programs\\WebStorm\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="ReactBuddySettings">
+    <option name="extensionsIgnore" value="true" />
+  </component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.haulmont.rcb.reactComponents" value="false" />
+        <entry key="com.haulmont.rcb.reactInspector" value="false" />
+        <entry key="com.haulmont.rcb.storybook" value="false" />
+      </map>
+    </option>
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\DoAnTotNghiep\FrontEnd\web-library\components\UserDropDown" />
+      <recent name="D:\DoAnTotNghiep\FrontEnd\web-library\public" />
       <recent name="D:\DoAnTotNghiep\FrontEnd\web-library\utils" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -91,7 +125,80 @@
       <workItem from="1698933975322" duration="5481000" />
       <workItem from="1698976402023" duration="24079000" />
       <workItem from="1699020644557" duration="811000" />
+      <workItem from="1699149944291" duration="599000" />
+      <workItem from="1699506943460" duration="1213000" />
+      <workItem from="1700303470808" duration="1238000" />
+      <workItem from="1700463639183" duration="607000" />
+      <workItem from="1700532421423" duration="16096000" />
+      <workItem from="1700575344598" duration="3237000" />
+      <workItem from="1700579431009" duration="5402000" />
+      <workItem from="1700618231332" duration="7148000" />
+      <workItem from="1700659029281" duration="11125000" />
+      <workItem from="1700705491742" duration="7511000" />
+      <workItem from="1700746158564" duration="11002000" />
+      <workItem from="1700792187391" duration="5884000" />
+      <workItem from="1700810591593" duration="468000" />
+      <workItem from="1700811069763" duration="8623000" />
+      <workItem from="1700918906507" duration="12425000" />
+      <workItem from="1700966341407" duration="10786000" />
+      <workItem from="1701050525082" duration="25980000" />
+      <workItem from="1701091850610" duration="10434000" />
+      <workItem from="1701137200941" duration="21081000" />
+      <workItem from="1701176770782" duration="7065000" />
+      <workItem from="1701222451687" duration="25552000" />
+      <workItem from="1701264257497" duration="9369000" />
+      <workItem from="1701309479145" duration="4017000" />
+      <workItem from="1701349046287" duration="8795000" />
+      <workItem from="1701404377832" duration="14713000" />
+      <workItem from="1701482887258" duration="2637000" />
+      <workItem from="1701520869738" duration="2339000" />
+      <workItem from="1701569409890" duration="4809000" />
+      <workItem from="1701655730574" duration="593000" />
+      <workItem from="1701697359274" duration="9375000" />
+      <workItem from="1701707755652" duration="469000" />
+      <workItem from="1701742241822" duration="18448000" />
+      <workItem from="1701782724318" duration="7044000" />
+      <workItem from="1701828446918" duration="26446000" />
+      <workItem from="1701866306986" duration="7155000" />
+      <workItem from="1701914964884" duration="2748000" />
+      <workItem from="1701959511668" duration="2712000" />
+      <workItem from="1702002645169" duration="827000" />
+      <workItem from="1702042485369" duration="594000" />
+      <workItem from="1702088333233" duration="21618000" />
+      <workItem from="1702172716151" duration="36096000" />
+      <workItem from="1702260503099" duration="1190000" />
+      <workItem from="1702301298544" duration="1191000" />
+      <workItem from="1702346882020" duration="594000" />
+      <workItem from="1702434964080" duration="1199000" />
+      <workItem from="1702527056852" duration="4448000" />
+      <workItem from="1702629899110" duration="2831000" />
+      <workItem from="1702635915992" duration="1055000" />
+      <workItem from="1702647829675" duration="2629000" />
+      <workItem from="1702690764705" duration="21528000" />
+      <workItem from="1702778668711" duration="1190000" />
+      <workItem from="1702872761813" duration="598000" />
+      <workItem from="1702957363718" duration="5753000" />
+      <workItem from="1702992572241" duration="1221000" />
+      <workItem from="1702995081600" duration="5603000" />
+      <workItem from="1703050876324" duration="13295000" />
     </task>
+    <task id="LOCAL-00001" summary="impl cookies to save token">
+      <option name="closed" value="true" />
+      <created>1699084455732</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1699084455734</updated>
+    </task>
+    <task id="LOCAL-00002" summary="impl all api not phieu muon">
+      <option name="closed" value="true" />
+      <created>1701190686351</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1701190686351</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -108,15 +215,23 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="impl cookies to save token" />
+    <MESSAGE value="impl all api not phieu muon" />
+    <option name="LAST_COMMIT_MESSAGE" value="impl all api not phieu muon" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/components/AppLayout/AppLayout.js</url>
-          <line>16</line>
-          <option name="timeStamp" value="25" />
+          <url>file://$PROJECT_DIR$/pages/user_detail.js</url>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="36" />
         </line-breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint enabled="true" type="javascript-exception" />
+      </default-breakpoints>
     </breakpoint-manager>
   </component>
 </project>
